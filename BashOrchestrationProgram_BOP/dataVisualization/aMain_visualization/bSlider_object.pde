@@ -1,0 +1,8 @@
+class Slider{
+
+
+  public Slider(){
+  }
+  
+  
+}
