@@ -1,17 +1,14 @@
 void draw(){
+    //loadData();
+    translate(50,500);
+    scale(1.0);
+    image(mapImage,0,0);
     display();
-    GUI();
+    //GUI();
 }
 
 void display(){
-  switch(mapState){
-    case 0:
-      mercatorMap();
-    case 1:
-      robinsonMap();
-    case 2:
-      gallPetersMap();
-  }
+  
 }
 
 void GUI(){
@@ -28,5 +25,5 @@ void displayOcean(){
 void displayEvents(){
 }
 
-void displayISS(){
+void displayISS(){ // convert ISS position (x,y,z) if it's not in lat,long to lat,long then re-map back to mapping x,y
 }

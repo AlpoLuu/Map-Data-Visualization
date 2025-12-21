@@ -4,24 +4,31 @@ grab the 3 datasets to get an archived files for initial testing
 with live data, grab with .py then standardize the stream for use
 
 update processing every based on data stream
+
+-----
+
+This is where data will be taken from the extract then optimized for data stream ( sys.stdout and sys.stderr)
+
 """
 
 import subprocess
 import sys
+import dataMain
 
 #archived
 #cyclic, realtime
 #global, sector, point
 
-    #Do I have to set block buffer?
+    #Do I have to set block buffer? Yes, maybe. IO is FIFO
     
 
 extractProc = {
     #archived
     "GMT": "1", #GMT Remote Data, cached locally
+        #changed to NOAA_OAA
 
     "CDS": "2", #Copernicus Climate Data Store (CDS), needs API key
-    "NASA": "3", #needs an Earthdata account to access data
+    #"NASA": "3", #needs an Earthdata account to access data
 
     #cyclic + realtime
     "USGS": "4", #USGS Earth Center
@@ -58,7 +65,7 @@ def main():
     #print(sys.version)
     #grabbing is just extracting
 
-def extract(particularProcess):
+def extract(particularProcess): # not needed can just grab standardized array from dataMain
     match particularProcess:
         case 1: # for each case, extract format turn into an array
             print("w")
@@ -67,13 +74,19 @@ def extract(particularProcess):
             pass
 
 
-def standardizeData(arrayOfData):
+def standardizeData(arrayOfData): # not needed can just grab standardized array from dataMain
     print("w")
     #apparently, you're supposed to partition this data using SQL or something though I won't be doing that
 
-def transform(input):
+# systemOutManage method
+# function to manage input ( data )
+# where data is the standardized array from dataMain.py
+# is where actions sys.stdout, sys.stderr will be done
+
+def systemOutManage(input):
     print("w")
-    #where data is sys.stdout
+
+
 
 if __name__ == "__main__":
     main()

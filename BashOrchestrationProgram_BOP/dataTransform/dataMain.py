@@ -2,6 +2,7 @@ import math
 import sys
 import numpy
 import csv
+import dataExt
 
 from mpmath import ln
 
@@ -10,12 +11,12 @@ standardized 2d array for data
 columns: lat, long, x_mer, y_mer, x_rob, y_rob, x_gall, y_gall, land/ocean val, temp,
 Only fully do-able after going through file types
 
-GMT test
+OTD test
 columns: lat, long, x_mer, y_mer, x_rob, y_rob, x_gall, y_gall, land/ocean val 
 
+Geospatial data is raster not vector
 
 rows: station/points from globe/set of sensors on a point processed
-
 """
 
 """
@@ -40,14 +41,68 @@ use a stream
 send 2d-array of x,y from projection P to Processing using streams
 
 find bounds for each of the projections for scaling in Processing
-
-
-
 """
+
+standardArray = [[]]
+
+# for row name completion, I need to know all possible data types:
+# row[0] names for NOAA_OAA and base: positionName, lat, long, x_mer, y_mer, x_rob, y_rob, x_gall, y_gall, map_val
+# row[1] names for units: str, rad, rad, float, float, float, float, float, float, binary
+
+# row[0],2 names for CDS
+
+# row process for NOAA_elevation ( flatten to earth mask )
+# refer to https://www.ngdc.noaa.gov/mgg/topo/gltiles.html
+# set startPosA, startPosB, . . . . startPosP
+
+# row names for CDS (Climate Data Store) :
+    #files are from https://cds.climate.copernicus.eu/datasets/reanalysis-era5-single-levels?tab=overview
+    #data is in either .grib or .NETCDF ( must be downloaded using the python earthkit module or through web API )
+        #.grib has a header, and is stored in binary; it seems as though .NETCDF is what you want
+        #1 Used WEB-API for file, CDS and OTD are easy to access for testing, then cloud/remote access is done using
+
+        #2 curling https, api requests and cloud for USGS, NOAA_buoy, NOAA_w, OWM, NASA, ISS
+        # ( the main actings otherwise )
+
+        #3 big data is OSN ( for tracking all airplanes ); all of this would be much easier if I had a database
+        # language like SQL; I use 2d-arrays, python and matrix concepts
+
+# row names for USGS (National Earth Center):
+# https://earthquake.usgs.gov/fdsnws/event/1/ is the api-documentation for USGS earthquake catalog
+
+#https: // earthquake.usgs.gov / fdsnws / event / 1 / [METHOD[?PARAMETERS]]
+
+
+# row names to be appended with NOAA_Buoy: [ WSPD, ATMP, WTMP, OTMP ]
+    #files are from https://www.ndbc.noaa.gov/data/realtime2/
+    #same file format implies same data format, (.drift, .txt, .ocean)
+    #LAT(1/3), LON(1/3), WSPD, ATMP, WTMP, OTMP are the usable data types in these files
+
+    #position function that searches through all station names and links data with station name to get long/lat
+    # ( .txt and .ocean don't have LAT and LONG )
+
+    #implementation for NOAA
+
+# row names for NOAA_NWS:
+
+# #I can't use tagging or categories yet: unless
+# each column val ( WTMP, OTMP, ATMP ) corresponds to a respective column tag and then you group the point/station
+# to the data-set you're pulling from, which is only a dict corresponding to the rows to set with the columns
+
+    # categories = [NOAA_buoy, NOAA_weather, NOAA, USGS, OWM api, NASA ], misc: [OSN]
+    # for now categories and tags only include ( NOAA is a category of NOAA_buoy and NOAA_weather )
+        # categories are toggled with buttons
+        # tags seem like they eat too much memory and slow execution runtime, so they will not be implemented
+
+        # column tags may be exclusive and inclusive
+
+# Aswell as define union in arrays
 
 with open('/home/user/Desktop/Owl & Stars/BashOrchestrationProgram_BOP/robinsonTable.csv', 'r') as f:
     reader = csv.reader(f)
     rLT = list(reader) #reads CSV turns to str-2d-array
+
+#hex
 
 def main():
 
@@ -55,6 +110,8 @@ def main():
     for k in range(0,3):
         for i in range(1,19):
             rLT[i][k] = float(rLT[i][k])
+
+    #test run for NOAA elevation array
 
     #print(robinsonLT) #Check if 2d array went from str to float
 
@@ -66,14 +123,22 @@ def main():
 #flush needs a good conditional for block buffer; either append a marker line or have manual check for flush
 #block buffer send, just flush whenever it fills
 
-def preproData(streamData):
-    #latitude and longitude into mercator, robinson and gall-peters 2 -> 6 columns
+def standardArrayToCSV(file): # the map value takes the most space out of all the values, so it's not memory intensive
+    # nor demanding for pycharm to convert the standard array to a CSV, this is for tests
 
-    # 4 new columns or preserve latitude/longitude for processing?
-    # 4 new columns
+    return
 
-    # 6 new columns
-    print("w")
+def arrayToCSV(array, fileOutput): #either writes or appends to make a new line in a CSV fileOutput
+
+    return
+
+
+def preproMapData(streamData):
+    #latitude and longitude into mercator, robinson and gall-peters, maskValue 2 + 6 + 1 columns
+
+
+    return
+
 
 
 
@@ -134,22 +199,11 @@ def tableInterp(triTuple,XorY): #X or Y function on Robinson projection
 
     return lookVal
 
-
-
-
 def gallpeters(twoTuple):
     twoTuple[0] = twoTuple[0]
     twoTuple[1] = 2*(math.sin(twoTuple))
 
     return twoTuple
-
-def signZero(number):
-    if number < 0:
-        return -1
-    if number == 0:
-        return 1
-    if number > 0:
-        return 1
 
 if __name__ == "__main__":
     main()
